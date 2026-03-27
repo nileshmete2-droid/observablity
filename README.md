@@ -26,30 +26,19 @@ When done, open: **http://your-server-ip:3000** → login `admin / admin`
 
 ---
 
-## 🔧 Add Your Logs (2 Steps)
+## 🔧 Add Your Logs (1 File to Edit)
 
-You have a log file like `/opt/sit/executables/java-services/service-name/some.log` and you want to see it in Grafana.
+You have a log file like `/opt/apps/order-service/logs/app.log` and you want to see it in Grafana.
 
-### Step 1 — Mount the log folder
-
-Open `docker-compose.yml`. Find the promtail section. Uncomment or add your log folder:
-
-```yaml
-# Uncomment this line to mount your app logs:
-- /opt/apps:/opt/apps:ro,z
-```
-
-### Step 2 — Add label + path
-
-Open `promtail/promtail-config.yml`. Uncomment the example or add your own:
+Open `promtail/promtail-config.yml`. Uncomment an example or add your own:
 
 ```yaml
   - job_name: order-service
     static_configs:
       - targets: [localhost]
         labels:
-          service: "order-service"                                # ← label in Grafana
-          __path__: "/opt/apps/order-service/logs/app.log"       # ← your log file
+          service: "order-service"                          # ← this name shows in Grafana
+          __path__: "/opt/apps/order-service/logs/app.log"  # ← your log file path on the server
 ```
 
 Then restart:
@@ -60,6 +49,9 @@ podman-compose restart promtail
 ```
 
 **Done!** Open Grafana → pick "order-service" from dropdown → see logs.
+
+> **That's it.** You only edit `promtail-config.yml`. Nothing else.
+> Promtail can already see all files under `/opt` and `/var/log` on your server.
 
 ---
 
