@@ -35,8 +35,8 @@ You have a log file like `/opt/sit/executables/java-services/flowable/flow.log` 
 Open `docker-compose.yml`. Find the promtail section. Uncomment or add your log folder:
 
 ```yaml
-# Uncomment this line to mount all java-services logs:
-- /opt/sit/executables/java-services:/opt/sit/executables/java-services:ro,z
+# Uncomment this line to mount your app logs:
+- /opt/apps:/opt/apps:ro,z
 ```
 
 ### Step 2 — Add label + path
@@ -44,12 +44,12 @@ Open `docker-compose.yml`. Find the promtail section. Uncomment or add your log 
 Open `promtail/promtail-config.yml`. Uncomment the example or add your own:
 
 ```yaml
-  - job_name: flowable
+  - job_name: order-service
     static_configs:
       - targets: [localhost]
         labels:
-          service: "flowable"                                                    # ← label in Grafana
-          __path__: "/opt/sit/executables/java-services/flowable/flow.log"       # ← your log file
+          service: "order-service"                                # ← label in Grafana
+          __path__: "/opt/apps/order-service/logs/app.log"       # ← your log file
 ```
 
 Then restart:
@@ -59,7 +59,7 @@ cd /opt/observability
 podman-compose restart promtail
 ```
 
-**Done!** Open Grafana → pick "flowable" from dropdown → see logs.
+**Done!** Open Grafana → pick "order-service" from dropdown → see logs.
 
 ---
 
@@ -69,12 +69,12 @@ Want to add more services? Just copy-paste and change the **label** and **path**
 
 | Service | Label | Log Path |
 |---------|-------|----------|
-| Flowable | `flowable` | `/opt/sit/executables/java-services/flowable/flow.log` |
-| Housing Loan | `housing-loan` | `/opt/sit/executables/java-services/housing-loan/*.log` |
-| Vehicle Loan | `vehicle-loan` | `/opt/sit/executables/java-services/vehicle-loan/*.log` |
-| SSO | `sso` | `/opt/sit/executables/java-services/sso/*.log` |
-| Dashboard | `dashboard` | `/opt/sit/executables/java-services/dashboard/*.log` |
-| Extraction | `extraction` | `/opt/sit/executables/java-services/extraction/*.log` |
+| Order Service | `order-service` | `/opt/apps/order-service/logs/app.log` |
+| Payment Service | `payment-service` | `/opt/apps/payment-service/logs/*.log` |
+| User Service | `user-service` | `/opt/apps/user-service/logs/*.log` |
+| Auth Service | `auth-service` | `/opt/apps/auth-service/logs/*.log` |
+| Notification | `notification-service` | `/opt/apps/notification-service/logs/*.log` |
+| Single log file | `my-app` | `/opt/apps/my-app/app.log` |
 | Nginx | `nginx` | `/var/log/nginx/*.log` |
 
 All these examples are already in `promtail/promtail-config.yml` — just uncomment the ones you need.

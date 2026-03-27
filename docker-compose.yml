@@ -88,8 +88,8 @@ services:
       #  UNCOMMENT the lines you need:
       # =====================================================================
 
-      # Java services (flowable, housing-loan, vehicle-loan, sso, etc.)
-      # - /opt/sit/executables/java-services:/opt/sit/executables/java-services:ro,z
+      # Your app logs (mount the parent folder)
+      # - /opt/apps:/opt/apps:ro,z
 
       # Nginx logs
       # - /var/log/nginx:/var/log/nginx:ro,z

@@ -25,59 +25,59 @@ clients:
 
 scrape_configs:
 
-  # ---- EXAMPLE 1: Flowable (Java service) -----------------------------------
+  # ---- EXAMPLE 1: Order Service (Java) ---------------------------------------
   #
-  # - job_name: flowable
+  # - job_name: order-service
   #   static_configs:
   #     - targets: [localhost]
   #       labels:
-  #         service: "flowable"
-  #         __path__: "/opt/sit/executables/java-services/flowable/flow.log"
+  #         service: "order-service"
+  #         __path__: "/opt/apps/order-service/logs/app.log"
 
-  # ---- EXAMPLE 2: Housing Loan service --------------------------------------
+  # ---- EXAMPLE 2: Payment Service --------------------------------------------
   #
-  # - job_name: housing-loan
+  # - job_name: payment-service
   #   static_configs:
   #     - targets: [localhost]
   #       labels:
-  #         service: "housing-loan"
-  #         __path__: "/opt/sit/executables/java-services/housing-loan/*.log"
+  #         service: "payment-service"
+  #         __path__: "/opt/apps/payment-service/logs/*.log"
 
-  # ---- EXAMPLE 3: Vehicle Loan service --------------------------------------
+  # ---- EXAMPLE 3: User Service -----------------------------------------------
   #
-  # - job_name: vehicle-loan
+  # - job_name: user-service
   #   static_configs:
   #     - targets: [localhost]
   #       labels:
-  #         service: "vehicle-loan"
-  #         __path__: "/opt/sit/executables/java-services/vehicle-loan/*.log"
+  #         service: "user-service"
+  #         __path__: "/opt/apps/user-service/logs/*.log"
 
-  # ---- EXAMPLE 4: SSO / Auth service ----------------------------------------
+  # ---- EXAMPLE 4: Auth Service -----------------------------------------------
   #
-  # - job_name: sso
+  # - job_name: auth-service
   #   static_configs:
   #     - targets: [localhost]
   #       labels:
-  #         service: "sso"
-  #         __path__: "/opt/sit/executables/java-services/sso/*.log"
+  #         service: "auth-service"
+  #         __path__: "/opt/apps/auth-service/logs/*.log"
 
-  # ---- EXAMPLE 5: Dashboard service -----------------------------------------
+  # ---- EXAMPLE 5: Notification Service ---------------------------------------
   #
-  # - job_name: dashboard
+  # - job_name: notification-service
   #   static_configs:
   #     - targets: [localhost]
   #       labels:
-  #         service: "dashboard"
-  #         __path__: "/opt/sit/executables/java-services/dashboard/*.log"
+  #         service: "notification-service"
+  #         __path__: "/opt/apps/notification-service/logs/*.log"
 
-  # ---- EXAMPLE 6: Extraction service ----------------------------------------
+  # ---- EXAMPLE 6: Single log file (not a folder) ----------------------------
   #
-  # - job_name: extraction
+  # - job_name: my-app
   #   static_configs:
   #     - targets: [localhost]
   #       labels:
-  #         service: "extraction"
-  #         __path__: "/opt/sit/executables/java-services/extraction/*.log"
+  #         service: "my-app"
+  #         __path__: "/opt/apps/my-app/app.log"
 
   # ---- EXAMPLE 7: Nginx logs ------------------------------------------------
   #
