@@ -77,25 +77,11 @@ services:
       - ./promtail/promtail-config.yml:/etc/promtail/config.yml:ro
       - ./data/promtail:/promtail
 
-      # =====================================================================
-      #  YOUR LOG FOLDERS — mount them here
-      #
-      #  Format:  - /where/logs/are/on/server:/same/path/inside/container:ro,z
-      #
-      #  We mount the whole parent directory so all logs inside are visible.
-      #  The :ro means read-only, :z makes it work on SELinux servers.
-      #
-      #  UNCOMMENT the lines you need:
-      # =====================================================================
-
-      # Your app logs (mount the parent folder)
-      # - /opt/apps:/opt/apps:ro,z
-
-      # Nginx logs
-      # - /var/log/nginx:/var/log/nginx:ro,z
-
-      # System logs
-      # - /var/log:/var/log/host:ro,z
+      # These make your server's log files visible to Promtail.
+      # /opt and /var/log are mounted by default so Promtail can read
+      # any log file on your server. You don't need to change this.
+      - /opt:/opt:ro,z
+      - /var/log:/var/log:ro,z
 
     command: -config.file=/etc/promtail/config.yml
     depends_on:

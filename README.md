@@ -28,7 +28,7 @@ When done, open: **http://your-server-ip:3000** → login `admin / admin`
 
 ## 🔧 Add Your Logs (2 Steps)
 
-You have a log file like `/opt/sit/executables/java-services/flowable/flow.log` and you want to see it in Grafana.
+You have a log file like `/opt/sit/executables/java-services/service-name/some.log` and you want to see it in Grafana.
 
 ### Step 1 — Mount the log folder
 
