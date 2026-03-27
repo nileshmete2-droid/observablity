@@ -1,0 +1,21 @@
+[Unit]
+Description=Observability Stack (Prometheus, Loki, Promtail, Grafana)
+After=network-online.target
+Wants=network-online.target
+# Start after Podman socket is ready
+After=podman.socket
+Requires=podman.socket
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+# ✎ CHANGE: Set the path to where you placed the observability folder
+WorkingDirectory=/opt/observability
+ExecStart=/usr/bin/podman-compose up -d
+ExecStop=/usr/bin/podman-compose down
+# Give containers time to start/stop
+TimeoutStartSec=120
+TimeoutStopSec=60
+
+[Install]
+WantedBy=multi-user.target

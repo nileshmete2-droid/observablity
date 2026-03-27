@@ -1,0 +1,86 @@
+# =============================================================================
+#  LOKI CONFIGURATION
+#  Production-ready defaults for single-node deployment.
+#  Retention: 30 days max (data older than 30 days is auto-deleted).
+#  Docs: https://grafana.com/docs/loki/latest/configuration/
+# =============================================================================
+
+auth_enabled: false
+
+server:
+  http_listen_port: 3100
+  grpc_listen_port: 9096
+  log_level: info
+
+common:
+  instance_addr: 127.0.0.1
+  path_prefix: /loki
+  storage:
+    filesystem:
+      chunks_directory: /loki/chunks
+      rules_directory: /loki/rules
+  replication_factor: 1
+  ring:
+    kvstore:
+      store: inmemory
+
+query_range:
+  results_cache:
+    cache:
+      embedded_cache:
+        enabled: true
+        max_size_mb: 100
+
+schema_config:
+  configs:
+    - from: "2020-10-24"
+      store: tsdb
+      object_store: filesystem
+      schema: v13
+      index:
+        prefix: index_
+        period: 24h
+
+ingester:
+  chunk_encoding: snappy
+
+# =============================================================================
+#  RETENTION & LIMITS
+#
+#  ✎ retention_period: Maximum age of log data. Anything older is deleted.
+#    Set to 360h = 15 days.  Adjust for your needs:
+#      168h  = 7 days
+#      360h  = 15 days  ← current setting
+#      720h  = 30 days
+#
+#  ✎ ingestion_rate_mb: Max MB/s a single tenant can push. Increase if you
+#    have high-volume services.
+#
+#  ✎ ingestion_burst_size_mb: Burst allowance above the steady rate.
+# =============================================================================
+limits_config:
+  retention_period: 360h              # ✎ 15 days max retention
+  reject_old_samples: true
+  reject_old_samples_max_age: 360h    # ✎ Reject logs older than 15 days
+  max_cache_freshness_per_query: 10m
+  split_queries_by_interval: 15m
+  max_query_parallelism: 32
+  ingestion_rate_mb: 10               # ✎ Increase for high log volume
+  ingestion_burst_size_mb: 20         # ✎ Burst rate for spikes
+
+# =============================================================================
+#  COMPACTOR – Enforces retention by deleting expired data
+#
+#  ✎ compaction_interval: How often the compactor runs (10m is good default).
+#  ✎ retention_delete_delay: Grace period before permanent deletion (safety).
+# =============================================================================
+compactor:
+  working_directory: /loki/compactor
+  compaction_interval: 10m
+  retention_enabled: true             # ← Must be true for retention to work!
+  retention_delete_delay: 2h
+  retention_delete_worker_count: 150
+  delete_request_store: filesystem
+
+analytics:
+  reporting_enabled: false

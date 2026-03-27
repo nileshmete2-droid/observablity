@@ -1,0 +1,74 @@
+# =============================================================================
+#  PROMTAIL — reads your app's log files and sends them to Loki
+#
+#  TO ADD YOUR APP:
+#  1. Mount your log folder in docker-compose.yml (under promtail volumes)
+#  2. Uncomment an example below (or copy the template at the bottom)
+#  3. Change the service name and log path
+#  4. Restart:  podman-compose restart promtail
+# =============================================================================
+
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /promtail/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+    basic_auth:
+      username: obsuser
+      password: obspass123
+
+scrape_configs:
+
+  # ---- EXAMPLE: Node.js app ------------------------------------------------
+  # Mount in docker-compose:  /home/deploy/my-api/logs:/var/log/my-api:ro,z
+  #
+  # - job_name: my-node-api
+  #   static_configs:
+  #     - targets: [localhost]
+  #       labels:
+  #         service: "my-node-api"                # ← name shown in Grafana
+  #         __path__: "/var/log/my-api/*.log"      # ← path inside container
+
+  # ---- EXAMPLE: Java / Spring Boot app --------------------------------------
+  # Mount in docker-compose:  /opt/spring-app/logs:/var/log/spring-app:ro,z
+  #
+  # - job_name: my-spring-api
+  #   static_configs:
+  #     - targets: [localhost]
+  #       labels:
+  #         service: "my-spring-api"
+  #         __path__: "/var/log/spring-app/*.log"
+
+  # ---- EXAMPLE: Python / Django / Flask app ---------------------------------
+  # Mount in docker-compose:  /var/www/django/logs:/var/log/django:ro,z
+  #
+  # - job_name: my-django-app
+  #   static_configs:
+  #     - targets: [localhost]
+  #       labels:
+  #         service: "my-django-app"
+  #         __path__: "/var/log/django/*.log"
+
+  # ---- EXAMPLE: Nginx logs --------------------------------------------------
+  # Mount in docker-compose:  /var/log/nginx:/var/log/nginx:ro,z
+  #
+  # - job_name: nginx
+  #   static_configs:
+  #     - targets: [localhost]
+  #       labels:
+  #         service: "nginx"
+  #         __path__: "/var/log/nginx/*.log"
+
+  # ---- TEMPLATE: Copy this for any app --------------------------------------
+  # Mount in docker-compose:  /YOUR/APP/LOGS:/var/log/YOUR_APP:ro,z
+  #
+  # - job_name: YOUR_APP_NAME
+  #   static_configs:
+  #     - targets: [localhost]
+  #       labels:
+  #         service: "YOUR_APP_NAME"               # ← change this
+  #         __path__: "/var/log/YOUR_APP/*.log"     # ← change this

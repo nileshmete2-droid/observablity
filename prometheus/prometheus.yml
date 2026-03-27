@@ -1,0 +1,53 @@
+# =============================================================================
+#  PROMETHEUS — collects metrics from your apps
+#
+#  TO ADD YOUR APP:
+#  1. Your app must expose a /metrics endpoint (most frameworks support this)
+#  2. Uncomment an example below and change the target
+#  3. Restart:  podman-compose restart prometheus
+# =============================================================================
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  scrape_timeout: 10s
+
+scrape_configs:
+
+  # Prometheus monitors itself
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  # ---- EXAMPLE: Node.js app (npm install prom-client) -----------------------
+  #
+  # - job_name: "my-node-api"
+  #   static_configs:
+  #     - targets: ["my-node-api:8080"]            # ← your app's host:port
+  #       labels:
+  #         service: "my-node-api"                 # ← name shown in Grafana
+
+  # ---- EXAMPLE: Python Flask (pip install prometheus-flask-instrumentator) --
+  #
+  # - job_name: "my-flask-api"
+  #   static_configs:
+  #     - targets: ["my-flask-api:5000"]
+  #       labels:
+  #         service: "my-flask-api"
+
+  # ---- EXAMPLE: Java Spring Boot (add micrometer-registry-prometheus) -------
+  #
+  # - job_name: "my-spring-api"
+  #   metrics_path: "/actuator/prometheus"         # ← Spring uses this path
+  #   static_configs:
+  #     - targets: ["my-spring-api:8080"]
+  #       labels:
+  #         service: "my-spring-api"
+
+  # ---- TEMPLATE: Copy for any app -------------------------------------------
+  #
+  # - job_name: "YOUR_APP"
+  #   static_configs:
+  #     - targets: ["YOUR_APP_HOST:PORT"]          # ← change this
+  #       labels:
+  #         service: "YOUR_APP"                    # ← change this
