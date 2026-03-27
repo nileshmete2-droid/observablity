@@ -1,6 +1,6 @@
 # =============================================================================
 #  OBSERVABILITY STACK
-#  Only these 4 tools run in Podman. Your apps run normally on the server.
+#  Only these tools run in Podman. Your apps run normally on the server.
 #
 #  Start:   podman-compose up -d
 #  Grafana: http://localhost:3000  (admin / admin)
@@ -65,6 +65,9 @@ services:
 
   # ---------------------------------------------------------------------------
   #  PROMTAIL — reads log files from your server, sends them to Loki
+  #
+  #  Your log files are mounted below. Promtail reads them directly
+  #  from the host filesystem — your apps don't need to change anything.
   # ---------------------------------------------------------------------------
   promtail:
     image: grafana/promtail:3.1.0
@@ -75,20 +78,24 @@ services:
       - ./data/promtail:/promtail
 
       # =====================================================================
-      #  ADD YOUR APP LOG FOLDERS BELOW
+      #  YOUR LOG FOLDERS — mount them here
       #
-      #  Format:  - /where/your/app/writes/logs:/var/log/somename:ro,z
+      #  Format:  - /where/logs/are/on/server:/same/path/inside/container:ro,z
       #
-      #  :ro  = read only (Promtail won't change your logs)
-      #  :z   = makes it work on SELinux (always add this)
+      #  We mount the whole parent directory so all logs inside are visible.
+      #  The :ro means read-only, :z makes it work on SELinux servers.
       #
-      #  EXAMPLES — uncomment the ones you need:
+      #  UNCOMMENT the lines you need:
       # =====================================================================
-      #
-      # - /home/deploy/my-api/logs:/var/log/my-api:ro,z
-      # - /opt/spring-app/logs:/var/log/spring-app:ro,z
-      # - /var/www/django/logs:/var/log/django:ro,z
+
+      # Java services (flowable, housing-loan, vehicle-loan, sso, etc.)
+      # - /opt/sit/executables/java-services:/opt/sit/executables/java-services:ro,z
+
+      # Nginx logs
       # - /var/log/nginx:/var/log/nginx:ro,z
+
+      # System logs
+      # - /var/log:/var/log/host:ro,z
 
     command: -config.file=/etc/promtail/config.yml
     depends_on:

@@ -1,11 +1,13 @@
 # =============================================================================
 #  PROMTAIL — reads your app's log files and sends them to Loki
 #
-#  TO ADD YOUR APP:
-#  1. Mount your log folder in docker-compose.yml (under promtail volumes)
-#  2. Uncomment an example below (or copy the template at the bottom)
-#  3. Change the service name and log path
+#  HOW TO ADD YOUR LOGS:
+#  1. Uncomment an example below (or copy the template at the bottom)
+#  2. Change the "service" name (this is the label you see in Grafana)
+#  3. Change the "__path__" to your log file location
 #  4. Restart:  podman-compose restart promtail
+#
+#  That's it! Open Grafana → pick your service → see logs.
 # =============================================================================
 
 server:
@@ -23,38 +25,61 @@ clients:
 
 scrape_configs:
 
-  # ---- EXAMPLE: Node.js app ------------------------------------------------
-  # Mount in docker-compose:  /home/deploy/my-api/logs:/var/log/my-api:ro,z
+  # ---- EXAMPLE 1: Flowable (Java service) -----------------------------------
   #
-  # - job_name: my-node-api
+  # - job_name: flowable
   #   static_configs:
   #     - targets: [localhost]
   #       labels:
-  #         service: "my-node-api"                # ← name shown in Grafana
-  #         __path__: "/var/log/my-api/*.log"      # ← path inside container
+  #         service: "flowable"
+  #         __path__: "/opt/sit/executables/java-services/flowable/flow.log"
 
-  # ---- EXAMPLE: Java / Spring Boot app --------------------------------------
-  # Mount in docker-compose:  /opt/spring-app/logs:/var/log/spring-app:ro,z
+  # ---- EXAMPLE 2: Housing Loan service --------------------------------------
   #
-  # - job_name: my-spring-api
+  # - job_name: housing-loan
   #   static_configs:
   #     - targets: [localhost]
   #       labels:
-  #         service: "my-spring-api"
-  #         __path__: "/var/log/spring-app/*.log"
+  #         service: "housing-loan"
+  #         __path__: "/opt/sit/executables/java-services/housing-loan/*.log"
 
-  # ---- EXAMPLE: Python / Django / Flask app ---------------------------------
-  # Mount in docker-compose:  /var/www/django/logs:/var/log/django:ro,z
+  # ---- EXAMPLE 3: Vehicle Loan service --------------------------------------
   #
-  # - job_name: my-django-app
+  # - job_name: vehicle-loan
   #   static_configs:
   #     - targets: [localhost]
   #       labels:
-  #         service: "my-django-app"
-  #         __path__: "/var/log/django/*.log"
+  #         service: "vehicle-loan"
+  #         __path__: "/opt/sit/executables/java-services/vehicle-loan/*.log"
 
-  # ---- EXAMPLE: Nginx logs --------------------------------------------------
-  # Mount in docker-compose:  /var/log/nginx:/var/log/nginx:ro,z
+  # ---- EXAMPLE 4: SSO / Auth service ----------------------------------------
+  #
+  # - job_name: sso
+  #   static_configs:
+  #     - targets: [localhost]
+  #       labels:
+  #         service: "sso"
+  #         __path__: "/opt/sit/executables/java-services/sso/*.log"
+
+  # ---- EXAMPLE 5: Dashboard service -----------------------------------------
+  #
+  # - job_name: dashboard
+  #   static_configs:
+  #     - targets: [localhost]
+  #       labels:
+  #         service: "dashboard"
+  #         __path__: "/opt/sit/executables/java-services/dashboard/*.log"
+
+  # ---- EXAMPLE 6: Extraction service ----------------------------------------
+  #
+  # - job_name: extraction
+  #   static_configs:
+  #     - targets: [localhost]
+  #       labels:
+  #         service: "extraction"
+  #         __path__: "/opt/sit/executables/java-services/extraction/*.log"
+
+  # ---- EXAMPLE 7: Nginx logs ------------------------------------------------
   #
   # - job_name: nginx
   #   static_configs:
@@ -63,12 +88,17 @@ scrape_configs:
   #         service: "nginx"
   #         __path__: "/var/log/nginx/*.log"
 
-  # ---- TEMPLATE: Copy this for any app --------------------------------------
-  # Mount in docker-compose:  /YOUR/APP/LOGS:/var/log/YOUR_APP:ro,z
+  # ============================================================================
+  #  TEMPLATE — copy this for any new service
   #
-  # - job_name: YOUR_APP_NAME
+  #  Just change 2 things:
+  #    service: "YOUR_LABEL"        ← what you see in Grafana
+  #    __path__: "/your/log/path"   ← where your log file is
+  # ============================================================================
+  #
+  # - job_name: YOUR_LABEL
   #   static_configs:
   #     - targets: [localhost]
   #       labels:
-  #         service: "YOUR_APP_NAME"               # ← change this
-  #         __path__: "/var/log/YOUR_APP/*.log"     # ← change this
+  #         service: "YOUR_LABEL"
+  #         __path__: "/your/log/file.log"
